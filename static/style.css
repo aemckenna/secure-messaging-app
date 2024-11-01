@@ -1,10 +1,9 @@
-/* style.css */
 /* General Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif; 
+    font-family: 'Orbitron', sans-serif; /* Updated font-family */
 }
 
 :root {
@@ -12,13 +11,13 @@
 }
 
 body {
-    background: var(--gradient); /* Apply the gradient */
+    background: var(--gradient); 
     margin: 0;
     padding: 0;
     height: 100vh;
     width: 100%;
     color: #333;
-    background-attachment: fixed; /* Ensure the background stays fixed while scrolling */
+    background-attachment: fixed;
 }
 
 /* Header Styles */
@@ -54,7 +53,6 @@ body {
 }
 
 .header a:hover {
-    background-color: #2d3748;
     color: #f7fafc;
 }
 
@@ -83,13 +81,13 @@ form {
 
 /* General Button Styling */
 button {
-    background-color: #ca5a15;
+    display: flex;
+    justify-content: center; 
     color: white;
     padding: 12px 20px;
     border: none;
     border-radius: 6px;
     font-size: 16px;
-    cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
@@ -99,7 +97,7 @@ button {
 }
 
 button:hover {
-    background-color: #ca4b15;
+    background-color: #ffffff;
 }
 
 /* Login Container */
@@ -119,7 +117,8 @@ button:hover {
 }
 
 .sign-in {
-    background-color: #ca5a15;
+    display: flex;
+    flex-direction: column;
     color: white;
     padding: 12px 20px;
     border: none;
@@ -127,18 +126,17 @@ button:hover {
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    margin: 0 auto; /* Center horizontally */
-    display: block; /* Ensure the button is treated as a block-level element */
+    margin: 0 auto; 
+    display: block; 
 }
 
-/* Center the button inside the form container */
 .sign-in-container {
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center elements vertically */
-    align-items: center; /* Center elements horizontally */
-    width: 100%; /* Make sure container spans full width */
-    height: auto; /* Set height if needed */
+    justify-content: center; 
+    align-items: center;
+    width: 100%;
+    height: auto;
 }
 
 h1 {
@@ -162,15 +160,17 @@ input[type="text"], input[type="password"] {
     border-radius: 6px;
     font-size: 16px;
 }
-/* Error and Link Styles */
+
 .links {
     margin-top: 20px;
     font-size: 14px;
 }
 
 .links a {
+    display: flex;
+    justify-content: center; 
     text-decoration: none;
-    color: #3182ce;
+    color: #1470c5;
     margin-right: 10px;
     transition: color 0.3s ease;
 }
