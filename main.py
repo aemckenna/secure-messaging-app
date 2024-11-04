@@ -119,7 +119,7 @@ def register():
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
             # Generate key pair with a passphrase
-            passphrase = password.encode()  # Using password as passphrase for simplicity
+            passphrase = password.encode()
             encrypted_private_key, public_key_pem = generate_key_pair(passphrase)
             
             # Store public key in database
