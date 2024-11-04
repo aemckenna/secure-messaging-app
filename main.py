@@ -1,18 +1,28 @@
-from flask import Flask, render_template, request, redirect, url_for, session, g
-import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, session, g, send_file
+import psycopg2
 import re
 import hashlib
+import os
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
 
 app = Flask(__name__)
-
-# Secret key for session management
 app.secret_key = 'secure_messaging'
 
-# Database connection function for SQLite
+secret_password = os.environ.get('postgresDbPassword')
+
+# Database connection function for PostgreSQL
 def get_db_connection():
     if 'db' not in g:
-        g.db = sqlite3.connect('secure_messaging.db')
-        g.db.row_factory = sqlite3.Row
+        g.db = psycopg2.connect(
+            dbname='messaging-app',
+            user='ashermckenna',
+            password=secret_password,
+            host='localhost',
+            port='6000'
+        )
     return g.db
 
 # Close the database connection after each request
@@ -21,6 +31,31 @@ def close_connection(exception):
     db = g.pop('db', None)
     if db is not None:
         db.close()
+
+# Helper function to generate key pair
+def generate_key_pair(passphrase: bytes):
+    # Generate RSA Key Pair
+    private_key = rsa.generate_private_key(
+        public_exponent=65537,
+        key_size=2048,
+        backend=default_backend()
+    )
+    public_key = private_key.public_key()
+    
+    # Encrypt Private Key with a passphrase
+    encrypted_private_key = private_key.private_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PrivateFormat.PKCS8,
+        encryption_algorithm=serialization.BestAvailableEncryption(passphrase)
+    )
+    
+    # Public key in PEM format
+    public_key_pem = public_key.public_bytes(
+        encoding=serialization.Encoding.PEM,
+        format=serialization.PublicFormat.SubjectPublicKeyInfo
+    )
+    
+    return encrypted_private_key, public_key_pem
 
 # Login route
 @app.route('/login/', methods=['GET', 'POST'])
@@ -36,13 +71,13 @@ def login():
         # Query database
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
+        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, hashed_password))
         account = cursor.fetchone()
 
         if account:
             session['loggedin'] = True
-            session['id'] = account['id']
-            session['username'] = account['username']
+            session['id'] = account[0] 
+            session['username'] = account[1]
             return redirect(url_for('messaging'))
         else:
             msg = 'Incorrect username/password!'
@@ -64,12 +99,13 @@ def register():
         username = request.form['username']
         password = request.form['password']
         email = request.form['email']
-
+        
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM accounts WHERE username = ?', (username,))
+        
+        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
         account = cursor.fetchone()
-
+        
         if account:
             msg = 'Account already exists!'
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
@@ -81,17 +117,33 @@ def register():
         else:
             # Hash password securely
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
+
+            # Generate key pair with a passphrase
+            passphrase = password.encode()  # Using password as passphrase for simplicity
+            encrypted_private_key, public_key_pem = generate_key_pair(passphrase)
             
-            cursor.execute('INSERT INTO accounts (username, password, email) VALUES (?, ?, ?)', (username, hashed_password, email,))
+            # Store public key in database
+            cursor.execute('INSERT INTO accounts (username, password, email, public_key) VALUES (%s, %s, %s, %s)',
+                           (username, hashed_password, email, public_key_pem))
             conn.commit()
-            msg = 'You have successfully registered!'
+
+            # Save private key to a file for download
+            private_key_filename = f"{username}_private_key.pem"
+            with open(private_key_filename, 'wb') as private_key_file:
+                private_key_file.write(encrypted_private_key)
+            
+            msg = 'You have successfully registered! Your private key file is ready for download.'
+            return send_file(private_key_filename, as_attachment=True)
+        
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
+        
     return render_template('register.html', msg=msg)
 
-@app.route ('/messaging/')
+@app.route('/messaging/')
 def messaging():
     msg = ''
-    
+    return render_template('messaging.html', msg=msg)
+
 if __name__ == '__main__':
     app.run(debug=True)
