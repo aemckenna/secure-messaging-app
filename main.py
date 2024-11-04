@@ -23,7 +23,7 @@ def close_connection(exception):
         db.close()
 
 # Login route
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/login/', methods=['GET', 'POST'])
 def login():
     msg = ''
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
@@ -43,7 +43,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             session['username'] = account['username']
-            return redirect(url_for('workout'))
+            return redirect(url_for('messaging'))
         else:
             msg = 'Incorrect username/password!'
     return render_template('index.html')
@@ -89,5 +89,8 @@ def register():
         msg = 'Please fill out the form!'
     return render_template('register.html', msg=msg)
 
+#@app.route ('/messaging/')
+#def messaging():
+    
 if __name__ == '__main__':
     app.run(debug=True)

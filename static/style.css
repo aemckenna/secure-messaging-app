@@ -1,186 +1,221 @@
-/* style.css */
-/* General Styles */
+@font-face {
+    font-family: 'Iceland';
+    src: url('/static/Iceland/Iceland-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Inter', sans-serif; 
 }
 
-:root {
-  --gradient: linear-gradient(to bottom right, rgb(0, 0, 0), rgb(54, 103, 53), rgb(8, 121, 0));
-}
-
-body {
-    background: var(--gradient); /* Apply the gradient */
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    width: 100%;
-    color: #333;
-    background-attachment: fixed; /* Ensure the background stays fixed while scrolling */
-}
-
-/* Header Styles */
-.header {
-    width: 100%;
-    padding: 10px 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-}
-
-.header a {
-    float: center;
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 12px 20px;
-    text-decoration: none;
-    font-size: 16px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-.header a.logo {
-    float: center;
-    font-size: 24px;
-    font-weight: bold;
-    letter-spacing: 1px;
-}
-
-.header-right {
-    float: center;
-}
-
-.header a:hover {
-    background-color: #2d3748;
-    color: #f7fafc;
-}
-
-.header a.active {
-    background-color: #3081e5;
-    color: white;
-}
-
-/* Form Styling */
-form {
-    width: 45%;
-    display: flex;
-    flex-direction: column;
-}
-
-.dropdown {
-    width: 100%;
-    padding: 15px;
-    margin: 10px 0;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    background-color: #e2e8f0;
-    font-size: 16px;
-    color: #2d3748;
-}
-
-/* General Button Styling */
-button {
-    background-color: #ca5a15;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.container {
+body, html {
+    height: 100%;
+    font-family: 'Iceland', sans-serif;
     display: flex;
     justify-content: center;
+    align-items: center;
+    color: white;
+    background-color: #000;
+    overflow: hidden;
+}
+
+/* Background */
+.background {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('sm-ui.png') center center no-repeat;
+    background-size: cover;
+}
+
+/* Fade in animation for the login card */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Login and register card styling */
+.login-card {
+    width: 300px;
+    padding: 20px;
+    background: #ffffff1a;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0px 0px 30px #00F48E;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.login-card h2 {
+    margin-bottom: 20px;
+}
+
+.login-card label {
+    font-size: 12px;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+    display: block;
+    text-align: left;
+    width: 100%;
+    color: #00F48E;
+}
+
+/* Input container with icon */
+.input-container {
+    position: relative;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00F48E;
+    font-size: 14px;
+}
+
+/* Other input styling */
+.input-container input {
+    width: 100%;
+    padding: 10px 10px 10px 30px;
+    font-size: 14px;
+    color: #00F48E;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    outline: none;
+    transition: transform 0.2s;
+}
+
+/* Remove autofill background color */
+.input-container input:-webkit-autofill,
+.input-container input:-webkit-autofill:hover,
+.input-container input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #00F48E;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+.input-container input {
+    background-color: transparent;
+    color-scheme: dark;
+}
+
+.input-container input:focus {
+    transform: scale(1.02); 
+}
+
+/* Support link styling */
+.support-link {
+    font-size: 12px;
+    color: white;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+    text-align: center;
+    transition: color 0.3s;
+}
+
+.support-link:hover {
+    text-decoration: underline;
+    color: #00F48E; 
+}
+
+/* Button styling */
+button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: 'Iceland', sans-serif; 
+    color: #00F48E;
+    background: transparent;
+    border: 1px solid #00F48E;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 button:hover {
-    background-color: #ca4b15;
+    background-color: #00F48E;
+    color: black;
+    transform: scale(1.05); 
 }
 
-/* Login Container */
-.login-container {
-    display: flex;
-    justify-content: center; 
-    margin-top: 150px;
+/* Error message styling */
+.error {
+    color: #FF4B4B;
+    font-size: 12px;
+    margin-top: 10px;
     text-align: center;
 }
 
-.login-box { 
-    background-color: rgba(104, 100, 97, 0.282);
-    padding: 40px;
-    border-radius: 5px;
-    box-shadow: 0 0 15px 5px #00ff2a80;
-    width: 400px;
+/* Glitch effect for header */
+.glitch {
+    position: relative;
+    color: #00F48E;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    display: inline-block;
+    overflow: hidden;
 }
 
-.sign-in {
-    background-color: #ca5a15;
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 6px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin: 0 auto; /* Center horizontally */
-    display: block; /* Ensure the button is treated as a block-level element */
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    color: #00F48E;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    animation: glitch-anim 2s infinite linear alternate-reverse;
 }
 
-/* Center the button inside the form container */
-.sign-in-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center; /* Center elements vertically */
-    align-items: center; /* Center elements horizontally */
-    width: 100%; /* Make sure container spans full width */
-    height: auto; /* Set height if needed */
+.glitch::after {
+    left: 1px; 
+    text-shadow: -1px 0 red, 1px 0 blue;
+    clip: rect(0, 900px, 0, 0); 
 }
 
-h1 {
-    margin-bottom: 20px;
-    font-size: 28px;
-    color: #ffffff;
-}
-
-label {
-    display: flex;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #ffffff;
-}
-
-input[type="text"], input[type="password"] {
-    width: 320px;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
-    font-size: 16px;
-}
-/* Error and Link Styles */
-.links {
-    margin-top: 20px;
-    font-size: 14px;
-}
-
-.links a {
-    text-decoration: none;
-    color: #3182ce;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-}
-
-.links a:hover {
-    text-decoration: underline;
-    color: #2b6cb0;
-}
-
-.error {
-    color: #e53e3e;
-    margin-top: 10px;
+@keyframes glitch-anim {
+    0% {
+        clip: rect(42px, 9999px, 30px, 0);
+        transform: skew(0.51deg);
+    }
+    20% {
+        clip: rect(30px, 9999px, 70px, 0);
+        transform: skew(0.3deg);
+    }
+    40% {
+        clip: rect(20px, 9999px, 50px, 0);
+        transform: skew(0.2deg);
+    }
+    60% {
+        clip: rect(60px, 9999px, 30px, 0);
+        transform: skew(0.4deg);
+    }
+    80% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: skew(0.5deg);
+    }
+    100% {
+        clip: rect(50px, 9999px, 60px, 0);
+        transform: skew(0.3deg);
+    }
 }
