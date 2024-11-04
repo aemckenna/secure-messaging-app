@@ -5,7 +5,6 @@
     font-style: normal;
 }
 
-/* General reset */
 * {
     margin: 0;
     padding: 0;
@@ -23,7 +22,7 @@ body, html {
     overflow: hidden;
 }
 
-/* Background gradient */
+/* Background */
 .background {
     width: 100vw;
     height: 100vh;
@@ -34,8 +33,19 @@ body, html {
     background-size: cover;
 }
 
+/* Fade in animation for the login card */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
-/* Login card styling */
+/* Login and register card styling */
 .login-card {
     width: 300px;
     padding: 20px;
@@ -45,15 +55,12 @@ body, html {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    box-shadow: 0px 0px 30px #00F48E; /* Subtle shadow for depth */
+    box-shadow: 0px 0px 30px #00F48E;
+    animation: fadeIn 0.5s ease-in-out; /* Fade-in animation */
 }
 
 .login-card h2 {
     margin-bottom: 20px;
-    font-size: 24px;
-    font-weight: 600;
-    letter-spacing: 2px;
-    color: #00F48E;
 }
 
 .login-card label {
@@ -63,21 +70,54 @@ body, html {
     display: block;
     text-align: left;
     width: 100%;
-    transform: translateY(50%);
     color: #00F48E;
 }
 
-.login-card input {
+/* Input container with icon */
+.input-container {
+    position: relative;
     width: 100%;
-    padding: 10px;
     margin-bottom: 15px;
+}
+
+.input-container i {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #00F48E;
     font-size: 14px;
-    color: white;
+}
+
+/* Other input styling */
+.input-container input {
+    width: 100%;
+    padding: 10px 10px 10px 30px;
+    font-size: 14px;
+    color: #00F48E;
     background: transparent;
     border: none;
     border-bottom: 1px solid white;
     outline: none;
-    text-align: left;
+    transition: transform 0.2s;
+}
+
+/* Remove autofill background color in Chrome */
+.input-container input:-webkit-autofill,
+.input-container input:-webkit-autofill:hover,
+.input-container input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #00F48E;
+    transition: background-color 5000s ease-in-out 0s;
+}
+
+/* General styling to prevent autofill color changes */
+.input-container input {
+    background-color: transparent;
+    color-scheme: dark;
+}
+
+.input-container input:focus {
+    transform: scale(1.02); /* Focus scaling effect */
 }
 
 /* Support link styling */
@@ -88,22 +128,95 @@ body, html {
     margin-top: 10px;
     display: inline-block;
     text-align: center;
-    transition: color 0.3s; /* Smooth transition for hover effect */
+    transition: color 0.3s;
 }
 
 .support-link:hover {
     text-decoration: underline;
-    color: #00F48E; /* Light color change on hover */
+    color: #00F48E; 
 }
 
-/* Footer text (BOUND) */
-.footer-text {
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+/* Button styling */
+button {
+    padding: 10px 20px;
+    font-size: 14px;
+    font-family: 'Iceland', sans-serif; 
+    color: #00F48E;
+    background: transparent;
+    border: 1px solid #00F48E;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+button:hover {
+    background-color: #00F48E;
+    color: black;
+    transform: scale(1.05); /* Button scaling effect */
+}
+
+/* Error message styling */
+.error {
+    color: #FF4B4B;
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Glitch effect for header */
+.glitch {
+    position: relative;
+    color: #00F48E;
     font-size: 24px;
-    font-weight: bold;
+    font-weight: 600;
     letter-spacing: 2px;
-    text-align: right; /* Center the text horizontally */
-    white-space: nowrap; /* Prevent text from wrapping into multiple lines */
+    display: inline-block;
+    overflow: hidden;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    color: #00F48E;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: 1px; /* Adjust horizontal position */
+    text-shadow: -1px 0 red, 1px 0 blue;
+    clip: rect(0, 900px, 0, 0); /* Adjust clip to control glitch visibility */
+}
+
+@keyframes glitch-anim {
+    0% {
+        clip: rect(42px, 9999px, 30px, 0);
+        transform: skew(0.51deg);
+    }
+    20% {
+        clip: rect(30px, 9999px, 70px, 0);
+        transform: skew(0.3deg);
+    }
+    40% {
+        clip: rect(20px, 9999px, 50px, 0);
+        transform: skew(0.2deg);
+    }
+    60% {
+        clip: rect(60px, 9999px, 30px, 0);
+        transform: skew(0.4deg);
+    }
+    80% {
+        clip: rect(10px, 9999px, 20px, 0);
+        transform: skew(0.5deg);
+    }
+    100% {
+        clip: rect(50px, 9999px, 60px, 0);
+        transform: skew(0.3deg);
+    }
 }
