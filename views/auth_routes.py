@@ -1,4 +1,4 @@
-from flask import Blueprint, sendfile, render_template, request, redirect, url_for, session
+from flask import Blueprint, send_file, render_template, request, redirect, url_for, session
 from db import get_db_connection
 from encryption import generate_key_pair
 import hashlib
