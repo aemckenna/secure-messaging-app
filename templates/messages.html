@@ -24,7 +24,9 @@
                     <h2>Contacts</h2>
                     {% for contact in contacts %}
                         <div class="chat-client">
-                            <p>{{ contact.username }}</p>
+                            <a href="{{ url_for('messaging.messages', contact=contact.username) }}">
+                                <p>{{ contact.username | e }}</p>
+                            </a>
                         </div>
                     {% endfor %}
                 </div>
@@ -33,14 +35,14 @@
             <!-- Main chat content area -->
             <main class="chat-content">
                 <div class="chat-header">
-                    <h2>Chat with {{ selected_contact.username if selected_contact else '...' }}</h2>
+                    <h2>Chat with {{ selected_contact | default("...") | e }}</h2>
                 </div>
                 
                 <div class="chat-messages">
                     {% if messages %}
                         {% for message in messages %}
                             <div class="message {{ 'sent' if message.sender == session['username'] else 'received' }}">
-                                <p>{{ message.content }}</p>
+                                <p>{{ message.message | e }}</p>
                                 <span class="timestamp">{{ message.timestamp }}</span>
                             </div>
                         {% endfor %}
@@ -49,12 +51,16 @@
                     {% endif %}
                 </div>
                 
-                <!-- Message input box -->
-                <form action="{{ url_for('messaging.send_message') }}" method="POST" class="message-form">
-                    <input type="text" name="message" placeholder="Type a message..." required>
-                    <input type="hidden" name="recipient" value="{{ selected_contact.username }}">
-                    <button type="submit"><i class="fa fa-paper-plane"></i> Send</button>
-                </form>
+                <!-- Message input box, displayed only if a contact is selected -->
+                {% if selected_contact %}
+                    <form action="{{ url_for('messaging.send_message') }}" method="POST" class="message-form">
+                        <input type="text" name="message" placeholder="Type a message..." required>
+                        <input type="hidden" name="recipient" value="{{ selected_contact | e }}">
+                        <button type="submit"><i class="fa fa-paper-plane"></i> Send</button>
+                    </form>
+                {% else %}
+                    <p class="select-contact">Please select a contact to start chatting.</p>
+                {% endif %}
             </main>
         </div>
     </div>

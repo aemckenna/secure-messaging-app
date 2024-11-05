@@ -23,20 +23,26 @@ def generate_key_pair(passphrase: bytes):
 
 # Encrypt message with recipient's public key
 def encrypt_message(public_key_pem, message):
-    public_key = serialization.load_pem_public_key(public_key_pem, backend=default_backend())
-    encrypted_message = public_key.encrypt(
-        message.encode(),
-        padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
-    )
-    return encrypted_message
+    try:
+        public_key = serialization.load_pem_public_key(public_key_pem, backend=default_backend())
+        encrypted_message = public_key.encrypt(
+            message.encode(),
+            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
+        )
+        return {'status': 'success', 'encrypted_message': encrypted_message}
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}
 
 # Decrypt message with user's private key
 def decrypt_message(encrypted_message, private_key_pem, passphrase):
-    private_key = serialization.load_pem_private_key(
-        private_key_pem, password=passphrase, backend=default_backend()
-    )
-    decrypted_message = private_key.decrypt(
-        encrypted_message,
-        padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
-    )
-    return decrypted_message.decode()
+    try:
+        private_key = serialization.load_pem_private_key(
+            private_key_pem, password=passphrase, backend=default_backend()
+        )
+        decrypted_message = private_key.decrypt(
+            encrypted_message,
+            padding.OAEP(mgf=padding.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None)
+        )
+        return {'status': 'success', 'decrypted_message': decrypted_message.decode()}
+    except Exception as e:
+        return {'status': 'error', 'message': str(e)}

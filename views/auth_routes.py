@@ -3,8 +3,15 @@ from db import get_db_connection
 from encryption import generate_key_pair
 import hashlib
 import re
+import random
+import string
+from datetime import datetime, timezone
 
 auth_bp = Blueprint('auth', __name__)
+
+def generate_code(length=6):
+    characters = string.ascii_letters + string.digits
+    return ''.join(random.choice(characters) for i in range(length))
 
 @auth_bp.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -68,18 +75,19 @@ def register():
             passphrase = password.encode()
             encrypted_private_key, public_key_pem = generate_key_pair(passphrase)
             
-            # Store public key in database
-            cursor.execute('INSERT INTO accounts (username, password, email, public_key) VALUES (%s, %s, %s, %s)',
-                           (username, hashed_password, email, public_key_pem))
-            conn.commit()
-
-            # Save private key to a file for download
-            private_key_filename = f"{username}_private_key.pem"
-            with open(private_key_filename, 'wb') as private_key_file:
-                private_key_file.write(encrypted_private_key)
+            # Generate a unique connection ID for the user
+            connection_id = generate_code()
             
-            msg = 'You have successfully registered! Your private key file is ready for download.'
-            return send_file(private_key_filename, as_attachment=True)
+            # Generate current timestamp
+            created_at = datetime.now(timezone.utc)
+
+            # Insert new account data into the database
+            cursor.execute('''INSERT INTO accounts (username, password, email, public_key, private_key, created_at, connection_id)
+                              VALUES (%s, %s, %s, %s, %s, %s, %s)''',
+                           (username, hashed_password, email, public_key_pem, encrypted_private_key, created_at, connection_id))
+            conn.commit()
+            
+            msg = 'You have successfully registered! Your account is ready for use.'
         
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
