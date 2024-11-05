@@ -78,7 +78,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account[0] 
             session['username'] = account[1]
-            return redirect(url_for('messaging'))
+            return redirect(url_for('messages'))
         else:
             msg = 'Incorrect username/password!'
     return render_template('index.html')
@@ -140,10 +140,9 @@ def register():
         
     return render_template('register.html', msg=msg)
 
-@app.route('/messaging/')
-def messaging():
-    msg = ''
-    return render_template('messaging.html', msg=msg)
+@app.route('/messages')
+def messages():
+    return render_template('messages.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

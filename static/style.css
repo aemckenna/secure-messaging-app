@@ -1,3 +1,4 @@
+/* Add custom Iceland font */
 @font-face {
     font-family: 'Iceland';
     src: url('/static/Iceland/Iceland-Regular.ttf') format('truetype');
@@ -5,6 +6,7 @@
     font-style: normal;
 }
 
+/* Reset styles */
 * {
     margin: 0;
     padding: 0;
@@ -33,7 +35,7 @@ body, html {
     background-size: cover;
 }
 
-/* Fade in animation for the login card */
+/* Fade in animation for login card */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -43,6 +45,77 @@ body, html {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Container styling */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header styling */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #00ff99;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.settings-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Chat container */
+.chat-container {
+    display: flex;
+    border: 2px solid #00ff99;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Sidebar styling */
+.chat-sidebar {
+    width: 30%;
+    background-color: #1a1a1a;
+    border-right: 2px solid #00ff99;
+    padding: 20px;
+}
+
+.search-bar {
+    margin-bottom: 20px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #333;
+    color: #00ff99;
+    font-size: 16px;
+    text-align: center;
+}
+
+.chat-clients {
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
+}
+
+/* Main chat content styling */
+.chat-content {
+    width: 70%;
+    padding: 20px;
+    color: #ffffff;
+    font-size: 18px;
+    text-align: center;
 }
 
 /* Login and register card styling */
@@ -102,7 +175,6 @@ body, html {
     transition: transform 0.2s;
 }
 
-/* Remove autofill background color */
 .input-container input:-webkit-autofill,
 .input-container input:-webkit-autofill:hover,
 .input-container input:-webkit-autofill:focus {
