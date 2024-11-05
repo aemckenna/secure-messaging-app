@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iStealth Messaging</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -12,21 +12,49 @@
         <header>
             <h1 class="glitch" data-text="iStealth">iStealth</h1>
             <div class="fa fa-cog"></div> 
-
         </header>
         
         <div class="chat-container">
+            <!-- Sidebar for list of chat clients -->
             <aside class="chat-sidebar">
                 <div class="search-bar">
                     <input type="text" placeholder="Search">
                 </div>
                 <div class="chat-clients">
-                    <p>chat clients here</p>
+                    <h2>Contacts</h2>
+                    {% for contact in contacts %}
+                        <div class="chat-client">
+                            <p>{{ contact.username }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </aside>
 
+            <!-- Main chat content area -->
             <main class="chat-content">
-                <p>Selected chat will be here</p>
+                <div class="chat-header">
+                    <h2>Chat with {{ selected_contact.username if selected_contact else '...' }}</h2>
+                </div>
+                
+                <div class="chat-messages">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="message {{ 'sent' if message.sender == session['username'] else 'received' }}">
+                                <p>{{ message.content }}</p>
+                                <span class="timestamp">{{ message.timestamp }}</span>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-messages">No messages yet. Start a conversation!</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Message input box -->
+                <form action="{{ url_for('messaging.send_message') }}" method="POST" class="message-form">
+                    <input type="text" name="message" placeholder="Type a message..." required>
+                    <input type="hidden" name="recipient" value="{{ selected_contact.username }}">
+                    <button type="submit"><i class="fa fa-paper-plane"></i> Send</button>
+                </form>
             </main>
         </div>
     </div>
