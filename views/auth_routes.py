@@ -32,7 +32,11 @@ def login():
         # Query database
         conn = get_db_connection()
         cursor = conn.cursor()
+<<<<<<< HEAD
         cursor.execute('SELECT id, username, private_key, password FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
+=======
+        cursor.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
+>>>>>>> e990234 (can now send messages)
         account = cursor.fetchone()
 
         if account:
@@ -45,7 +49,10 @@ def login():
             return redirect(url_for('messaging.messages'))
         else:
             msg = 'Incorrect username/password!'
+<<<<<<< HEAD
 
+=======
+>>>>>>> e990234 (can now send messages)
     return render_template('index.html', msg=msg)
 
 @auth_bp.route('/logout/')

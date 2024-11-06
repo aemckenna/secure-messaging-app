@@ -52,6 +52,7 @@ def messages():
 def send_message():
     if 'loggedin' not in session:
         return redirect(url_for('auth.login'))
+<<<<<<< HEAD
 
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -86,12 +87,30 @@ def send_message():
 
     print(f"Message content: {message}, recipient: {recipient_username}")
 
+=======
+    
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    
+    # Fetch sender's ID
+    cursor.execute('SELECT id FROM accounts WHERE username = ?', (session['username'],))
+    sender_result = cursor.fetchone()
+    if not sender_result:
+        flash("User not found.")
+        return redirect(url_for('auth.login'))
+    sender_id = sender_result[0]
+    
+    recipient_username = request.form['recipient']
+    message = request.form['message']
+    
+>>>>>>> e990234 (can now send messages)
     # Fetch the recipient's ID and public key
     cursor.execute('SELECT id, public_key FROM accounts WHERE username = ?', (recipient_username,))
     result = cursor.fetchone()
     if not result:
         flash("Recipient not found.")
         return redirect(url_for('messaging.messages'))
+<<<<<<< HEAD
 
     recipient_id, recipient_public_key_bytes = result
     print(f"Recipient ID: {recipient_id}")
@@ -126,6 +145,31 @@ def send_message():
     print("Message inserted into database.")
     flash("Message sent successfully.")
 
+=======
+    
+    recipient_id, recipient_public_key = result
+    print(f"Recipient ID: {recipient_id}")  # Debugging line
+    
+    encrypted_message_data = encrypt_message(recipient_public_key, message)
+    
+    if encrypted_message_data.get('status') == 'error':
+        flash("Encryption failed: " + encrypted_message_data.get('message', 'Unknown error'))
+        return redirect(url_for('messaging.messages'))
+    
+    encrypted_message = encrypted_message_data['encrypted_message']
+    print(f"Inserting message: Sender ID: {sender_id}, Recipient ID: {recipient_id}, Encrypted Message: {encrypted_message}")  # Debugging line
+    
+    try:
+        cursor.execute('INSERT INTO messages (sender_id, recipient_id, message) VALUES (?, ?, ?)',
+                       (sender_id, recipient_id, encrypted_message))
+        conn.commit()  # Ensure changes are saved in the database
+        flash("Message sent successfully.")
+    except Exception as e:
+        conn.rollback()
+        print(f"SQL Error: {e}")  # Print the SQL error to console for debugging
+        flash(f"Failed to send message: {e}")
+    
+>>>>>>> e990234 (can now send messages)
     cursor.close()
     return redirect(url_for('messaging.messages', contact=recipient_username))
 
@@ -133,7 +177,11 @@ def send_message():
 def retrieve_messages():
     if 'loggedin' not in session:
         return redirect(url_for('auth.login'))
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> e990234 (can now send messages)
     # Fetch user ID
     user_id = session['id']
     conn = get_db_connection()
@@ -145,6 +193,7 @@ def retrieve_messages():
     if not user:
         flash("User not found.")
         return redirect(url_for('messaging.messages'))
+<<<<<<< HEAD
 
     encrypted_private_key_pem, password = user
 
@@ -157,9 +206,17 @@ def retrieve_messages():
 
     # Fetch encrypted messages and HMACs for this user
     cursor.execute('SELECT sender_id, message, hmac, timestamp FROM messages WHERE recipient_id = ?', (user_id,))
+=======
+    
+    private_key_pem, password = user
+    
+    # Fetch encrypted messages for this user
+    cursor.execute('SELECT sender_id, message, timestamp FROM messages WHERE recipient_id = ?', (user_id,))
+>>>>>>> e990234 (can now send messages)
     encrypted_messages = cursor.fetchall()
 
     decrypted_messages = []
+<<<<<<< HEAD
     for sender_id, encrypted_message, message_hmac, timestamp in encrypted_messages:
         # Retrieve sender's public key
         cursor.execute('SELECT public_key FROM accounts WHERE id = ?', (sender_id,))
@@ -183,6 +240,12 @@ def retrieve_messages():
             decrypted_message = decrypted_message_data['decrypted_message']
             # Verify HMAC to ensure integrity
             if verify_hmac(aes_key, encrypted_message, message_hmac):
+=======
+    for sender_id, encrypted_message, timestamp in encrypted_messages:
+        try:
+            decrypted_message_data = decrypt_message(encrypted_message, private_key_pem, password.encode())
+            if decrypted_message_data.get('status') == 'success':
+>>>>>>> e990234 (can now send messages)
                 decrypted_messages.append({
                     'sender': sender_id,
                     'message': decrypted_message,
