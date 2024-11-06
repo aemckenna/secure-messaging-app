@@ -1,4 +1,4 @@
-from flask import Blueprint, send_file, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from db import get_db_connection
 from encryption import generate_key_pair
 import hashlib
@@ -26,7 +26,7 @@ def login():
         # Query database
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute('SELECT * FROM accounts WHERE username = %s AND password = %s', (username, hashed_password))
+        cursor.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
         account = cursor.fetchone()
 
         if account:
@@ -36,14 +36,14 @@ def login():
             return redirect(url_for('messaging.messages'))
         else:
             msg = 'Incorrect username/password!'
-    return render_template('index.html')
+    return render_template('index.html', msg=msg)
 
 @auth_bp.route('/logout/')
 def logout():
     session.pop('loggedin', None)
     session.pop('id', None)
     session.pop('username', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
 
 @auth_bp.route('/register/', methods=['GET', 'POST'])
 def register():
@@ -56,7 +56,7 @@ def register():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        cursor.execute('SELECT * FROM accounts WHERE username = %s', (username,))
+        cursor.execute('SELECT * FROM accounts WHERE username = ?', (username,))
         account = cursor.fetchone()
         
         if account:
@@ -83,7 +83,7 @@ def register():
 
             # Insert new account data into the database
             cursor.execute('''INSERT INTO accounts (username, password, email, public_key, private_key, created_at, connection_id)
-                              VALUES (%s, %s, %s, %s, %s, %s, %s)''',
+                              VALUES (?, ?, ?, ?, ?, ?, ?)''',
                            (username, hashed_password, email, public_key_pem, encrypted_private_key, created_at, connection_id))
             conn.commit()
             
