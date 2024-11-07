@@ -2,9 +2,12 @@ amckenna20_private_key.pem
 hellotest2345_private_key.pem
 thisIsATest_private_key.pem
 testing_private_key.pem
+<<<<<<< HEAD
 .DS_Store
 __pycache__/db.cpython-311.pyc
 __pycache__/encryption.cpython-311.pyc
+=======
+>>>>>>> temp-branch
 myenv/pyvenv.cfg
 myenv/bin/activate
 myenv/bin/activate.csh
@@ -2908,5 +2911,8 @@ myenv/lib/python3.11/site-packages/setuptools-74.1.2.dist-info/RECORD
 myenv/lib/python3.11/site-packages/setuptools-74.1.2.dist-info/REQUESTED
 myenv/lib/python3.11/site-packages/setuptools-74.1.2.dist-info/top_level.txt
 myenv/lib/python3.11/site-packages/setuptools-74.1.2.dist-info/WHEEL
+<<<<<<< HEAD
 __pycache__/db.cpython-311.pyc
 __pycache__/encryption.cpython-311.pyc
+=======
+>>>>>>> temp-branch
