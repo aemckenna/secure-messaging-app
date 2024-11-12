@@ -15,6 +15,14 @@
         </header>
         
         <div class="chat-container">
+            <!-- Add Client Form -->
+            <div class="add-client-form">
+                <form action="{{ url_for('messaging.add_client') }}" method="POST">
+                    <input type="text" name="connection_id" placeholder="Enter Client ID" required>
+                    <button type="submit">Add Client</button>
+                </form>
+            </div>
+
             <!-- Sidebar for list of chat clients -->
             <aside class="chat-sidebar">
                 <div class="search-bar">
