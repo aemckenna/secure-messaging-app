@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from db import get_db_connection
 from encryption import encrypt_message, decrypt_message
 import hashlib
@@ -11,7 +11,7 @@ auth_bp = Blueprint('auth', __name__)
 
 def generate_code(length=6):
     characters = string.ascii_letters + string.digits
-    return ''.join(random.choice(characters) for i in range(length))
+    return ''.join(random.choice(characters) for _ in range(length))
 
 @auth_bp.route('/login/', methods=['GET', 'POST'])
 def login():
@@ -33,7 +33,7 @@ def login():
             session['loggedin'] = True
             session['id'] = account[0] 
             session['username'] = account[1]
-            return redirect(url_for('messaging.messages'))
+            return redirect(url_for('messaging.view_messages'))
         else:
             msg = 'Incorrect username/password!'
     return render_template('index.html', msg=msg)
@@ -55,38 +55,43 @@ def register():
         
         conn = get_db_connection()
         cursor = conn.cursor()
-        
+
+        # Check if username already exists
         cursor.execute('SELECT * FROM accounts WHERE username = ?', (username,))
         account = cursor.fetchone()
-        
+
         if account:
-            msg = 'Account already exists!'
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-            msg = 'Invalid email address!'
-        elif not re.match(r'[A-Za-z0-9]+', username):
-            msg = 'Username must contain only letters and numbers!'
-        elif not username or not password or not email:
-            msg = 'Please fill out the form!'
+            msg = 'Account with this username already exists!'
         else:
-            # Hash password securely
-            hashed_password = hashlib.sha256(password.encode()).hexdigest()
+            # Check if email already exists
+            cursor.execute('SELECT * FROM accounts WHERE email = ?', (email,))
+            account_by_email = cursor.fetchone()
 
-            # Generate only the public key
-            _, public_key_pem = generate_key_pair()
+            if account_by_email:
+                msg = 'An account with this email already exists!'
+            elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only letters and numbers!'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
+            else:
+                # Hash password securely
+                hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
-            # Generate a unique connection ID for the user
-            connection_id = generate_code()
-            
-            # Generate current timestamp
-            created_at = datetime.now(timezone.utc)
+                # Generate a unique connection ID for the user
+                connection_id = generate_code()
+                
+                # Generate current timestamp
+                created_at = datetime.now(timezone.utc)
 
-            # Insert new account data into the database without private key storage
-            cursor.execute('''INSERT INTO accounts (username, password, email, public_key, created_at, connection_id)
-                              VALUES (?, ?, ?, ?, ?, ?)''',
-                           (username, hashed_password, email, public_key_pem, created_at, connection_id))
-            conn.commit()
-            
-            msg = 'You have successfully registered! Your account is ready for use.'
+                # Insert new account data into the database
+                cursor.execute('''INSERT INTO accounts (username, password, email, created_at, connection_id)
+                                  VALUES (?, ?, ?, ?, ?)''',
+                               (username, hashed_password, email, created_at, connection_id))
+                conn.commit()
+                
+                msg = 'You have successfully registered! Your account is ready for use.'
         
     elif request.method == 'POST':
         msg = 'Please fill out the form!'
