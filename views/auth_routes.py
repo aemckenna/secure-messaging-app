@@ -1,17 +1,11 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from db import get_db_connection
-from cryptography.hazmat.primitives.asymmetric import dh
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
-from cryptography.hazmat.primitives.hashes import SHA256
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from encryption import encrypt_private_key
+from encryption import encrypt_message, decrypt_message
 import hashlib
 import re
 import random
 import string
 from datetime import datetime, timezone
-import os
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -25,34 +19,23 @@ def login():
     if request.method == 'POST' and 'username' in request.form and 'password' in request.form:
         username = request.form['username']
         password = request.form['password']
-
+        
         # Hash password for secure comparison
         hashed_password = hashlib.sha256(password.encode()).hexdigest()
 
         # Query database
         conn = get_db_connection()
         cursor = conn.cursor()
-<<<<<<< HEAD
-        cursor.execute('SELECT id, username, private_key, password FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
-=======
         cursor.execute('SELECT * FROM accounts WHERE username = ? AND password = ?', (username, hashed_password))
->>>>>>> e990234 (can now send messages)
         account = cursor.fetchone()
 
         if account:
             session['loggedin'] = True
-            session['id'] = account[0]  # id
-            session['username'] = account[1]  # username
-            session['private_key'] = account[2]  # private_key
-            session['password'] = password  # Store the password in session
-            
+            session['id'] = account[0] 
+            session['username'] = account[1]
             return redirect(url_for('messaging.messages'))
         else:
             msg = 'Incorrect username/password!'
-<<<<<<< HEAD
-
-=======
->>>>>>> e990234 (can now send messages)
     return render_template('index.html', msg=msg)
 
 @auth_bp.route('/logout/')
@@ -87,30 +70,20 @@ def register():
         else:
             # Hash password securely
             hashed_password = hashlib.sha256(password.encode()).hexdigest()
-            
-            # Generate Diffie-Hellman key pair
-            parameters = dh.generate_parameters(generator=2, key_size=2048)
-            private_key = parameters.generate_private_key()
-            public_key = private_key.public_key()
-            
-            # Serialize public key to store in database
-            public_key_pem = public_key.public_bytes(
-                encoding=serialization.Encoding.PEM,
-                format=serialization.PublicFormat.SubjectPublicKeyInfo
-            )
-            
-            # Encrypt private key with password-based encryption
-            encrypted_private_key = encrypt_private_key(private_key, password.encode())  # Encrypt private key with passphrase            
+
+            # Generate only the public key
+            _, public_key_pem = generate_key_pair()
+
             # Generate a unique connection ID for the user
             connection_id = generate_code()
             
             # Generate current timestamp
             created_at = datetime.now(timezone.utc)
 
-            # Insert new account data into the database
-            cursor.execute('''INSERT INTO accounts (username, password, email, public_key, private_key, created_at, connection_id)
-                              VALUES (?, ?, ?, ?, ?, ?, ?)''',
-                           (username, hashed_password, email, public_key_pem, encrypted_private_key, created_at, connection_id))
+            # Insert new account data into the database without private key storage
+            cursor.execute('''INSERT INTO accounts (username, password, email, public_key, created_at, connection_id)
+                              VALUES (?, ?, ?, ?, ?, ?)''',
+                           (username, hashed_password, email, public_key_pem, created_at, connection_id))
             conn.commit()
             
             msg = 'You have successfully registered! Your account is ready for use.'
