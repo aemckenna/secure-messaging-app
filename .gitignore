@@ -2916,3 +2916,5 @@ __pycache__/db.cpython-311.pyc
 __pycache__/encryption.cpython-311.pyc
 =======
 >>>>>>> temp-branch
+poetry.lock
+pyproject.toml
