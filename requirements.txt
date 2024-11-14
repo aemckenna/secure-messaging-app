@@ -91,7 +91,6 @@ multidict==6.1.0
 mysqlclient==2.2.5
 Naked==0.1.32
 nest-asyncio==1.6.0
-numpy==2.1.2
 openai==0.28.0
 opencv-python==4.10.0.84
 packaging==24.1
