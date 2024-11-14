@@ -6,6 +6,18 @@
     font-style: normal;
 }
 
+/* Change the default color of all links */
+a {
+    color: #00F48E; /* Replace with your desired color */
+    text-decoration: none; /* Optional: remove underline */
+}
+
+/* Change the hover color of links */
+a:hover {
+    color: #00E89C; /* Replace with your desired hover color */
+    text-decoration: underline; /* Optional: add underline on hover */
+}
+
 /* Reset styles */
 * {
     margin: 0;
@@ -20,8 +32,11 @@ body, html {
     justify-content: center;
     align-items: center;
     color: white;
-    background-color: #000;
+    background-color: #121212;
     overflow: hidden;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
 /* Background */
@@ -49,10 +64,14 @@ body, html {
 
 /* Container styling */
 .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 10px;
+    box-sizing: border-box;
+    height: 90vh; /* Adjust to fit as needed */
+    width: 90vw; /* Adjust to fit as needed */
+    margin: auto;
 }
 
 /* Header styling */
@@ -63,7 +82,7 @@ header {
     color: #00ff99;
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 20px;
+    padding: 10px 20px; /* Added padding for spacing */
 }
 
 .settings-icon {
@@ -75,25 +94,45 @@ header {
 .chat-container {
     display: flex;
     border: 2px solid #00ff99;
-    border-radius: 10px;
-    overflow: hidden;
+    border-radius: 15px;
+    background-color: #121212;
+    margin: 20px;
+    flex-grow: 1;
 }
 
 /* Sidebar styling */
 .chat-sidebar {
     width: 30%;
-    background-color: #1a1a1a;
-    border-right: 2px solid #00ff99;
+    border-right: 2px solid #00F48E;
     padding: 20px;
+    border-radius: 15px 0 0 15px;
+    flex: 1;
 }
 
-.search-bar {
+.sidebar h2 {
+    text-align: center;
+    color: #00F48E;
     margin-bottom: 20px;
 }
 
+
 .search-bar input {
     width: 100%;
-    padding: 10px;
+    font-family: 'Iceland', sans-serif;
+    padding: 7px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #333;
+    color: #00ff99;
+    font-size: 16px;
+    text-align: center;
+}
+
+#message-input {
+    margin-top: 20px;
+    font-family: 'Iceland', sans-serif;
+    padding: 11px;
     border: none;
     border-radius: 5px;
     outline: none;
@@ -107,6 +146,8 @@ header {
     color: #ffffff;
     font-size: 18px;
     text-align: center;
+    margin-bottom: 20px;
+
 }
 
 /* Main chat content styling */
@@ -116,7 +157,27 @@ header {
     color: #ffffff;
     font-size: 18px;
     text-align: center;
+    border-radius: 0 15px 15px 0;
+    flex: 3;
+    padding: 10px;
 }
+
+/* Add Client button */
+.add-client-button {
+    display: block;
+    width: 100%;
+    padding: 7px;
+    font-size: 16px;
+    color: #121212;
+    background-color: #00F48E;
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    cursor: pointer;
+    margin: 5px auto;
+    justify-content: center;
+}
+
 
 /* Login and register card styling */
 .login-card {
@@ -188,7 +249,7 @@ header {
 }
 
 .input-container input:focus {
-    transform: scale(1.02); 
+    transform: scale(1.02);
 }
 
 /* Support link styling */
@@ -204,14 +265,14 @@ header {
 
 .support-link:hover {
     text-decoration: underline;
-    color: #00F48E; 
+    color: #00F48E;
 }
 
 /* Button styling */
 button {
     padding: 10px 20px;
     font-size: 14px;
-    font-family: 'Iceland', sans-serif; 
+    font-family: 'Iceland', sans-serif;
     color: #00F48E;
     background: transparent;
     border: 1px solid #00F48E;
@@ -223,9 +284,44 @@ button {
 button:hover {
     background-color: #00F48E;
     color: black;
-    transform: scale(1.05); 
+    transform: scale(1.05);
+}
+/* Modal styles */
+.modal {
+    display: none; 
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Black background with transparency */
 }
 
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    margin: 15% auto;
+    width: 50%; 
+    border-radius: 5px;
+    text-align: center;
+}
+
+.close-btn {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute;
+    top: 5px;
+    right: 15px;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 /* Error message styling */
 .error {
     color: #FF4B4B;
@@ -260,9 +356,9 @@ button:hover {
 }
 
 .glitch::after {
-    left: 1px; 
+    left: 1px;
     text-shadow: -1px 0 red, 1px 0 blue;
-    clip: rect(0, 900px, 0, 0); 
+    clip: rect(0, 900px, 0, 0);
 }
 
 @keyframes glitch-anim {
@@ -290,4 +386,50 @@ button:hover {
         clip: rect(50px, 9999px, 60px, 0);
         transform: skew(0.3deg);
     }
+}
+/* Keep the chat header centered */
+.chat-header {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Default to left alignment for messages */
+    gap: 10px;
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.sender-message {
+    background-color: #d1f7d1;  /* You can use your preferred color */
+    align-self: flex-start;  /* Align messages from the sender (you) to the right */
+}
+
+.client-message {
+    background-color: #333;  /* Use a different background color */
+    align-self: flex-end;  /* Align messages from the client to the left */
+}
+
+/* Timestamp styling */
+.timestamp {
+    font-size: 0.8rem;
+    color: #00f48e6c;
+    text-align: right;
+    display: block; 
+}
+
+/* Adjustments for message container */
+.message-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #00F48E;
+
 }
