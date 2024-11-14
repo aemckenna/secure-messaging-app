@@ -118,7 +118,6 @@ ptyprocess==0.7.0
 pure-eval==0.2.2
 PyAutoGUI==0.9.54
 pycparser==2.22
-pycrypto==2.6.1
 pycryptodome==3.21.0
 pycryptodomex==3.20.0
 pydantic==2.5.3
