@@ -6,16 +6,14 @@
     font-style: normal;
 }
 
-/* Change the default color of all links */
 a {
-    color: #00F48E; /* Replace with your desired color */
-    text-decoration: none; /* Optional: remove underline */
+    color: #00F48E;
+    text-decoration: none; 
 }
 
-/* Change the hover color of links */
 a:hover {
-    color: #00E89C; /* Replace with your desired hover color */
-    text-decoration: underline; /* Optional: add underline on hover */
+    color: #00E89C; 
+    text-decoration: underline; 
 }
 
 /* Reset styles */
@@ -69,8 +67,8 @@ body, html {
     justify-content: flex-start;
     border-radius: 10px;
     box-sizing: border-box;
-    height: 90vh; /* Adjust to fit as needed */
-    width: 90vw; /* Adjust to fit as needed */
+    height: 90vh; 
+    width: 90vw; 
     margin: auto;
 }
 
@@ -82,7 +80,7 @@ header {
     color: #00ff99;
     font-size: 24px;
     font-weight: bold;
-    padding: 10px 20px; /* Added padding for spacing */
+    padding: 10px 20px; 
 }
 
 .settings-icon {
@@ -295,7 +293,7 @@ button:hover {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* Black background with transparency */
+    background-color: rgba(0, 0, 0, 0.5); 
 }
 
 .modal-content {
@@ -396,7 +394,7 @@ button:hover {
 .chat-messages {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Default to left alignment for messages */
+    align-items: flex-start; 
     gap: 10px;
 }
 
@@ -408,13 +406,13 @@ button:hover {
 }
 
 .sender-message {
-    background-color: #d1f7d1;  /* You can use your preferred color */
-    align-self: flex-start;  /* Align messages from the sender (you) to the right */
+    background-color: #d1f7d1; 
+    align-self: flex-start;  
 }
 
 .client-message {
-    background-color: #333;  /* Use a different background color */
-    align-self: flex-end;  /* Align messages from the client to the left */
+    background-color: #333; 
+    align-self: flex-end; 
 }
 
 /* Timestamp styling */
@@ -431,5 +429,4 @@ button:hover {
     flex-direction: column;
     align-items: flex-start;
     color: #00F48E;
-
 }
