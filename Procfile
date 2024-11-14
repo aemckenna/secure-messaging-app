@@ -1,1 +1,1 @@
-web: gunicorn secure-messaging-app.wsgi:app
+web: gunicorn wsgi:app
