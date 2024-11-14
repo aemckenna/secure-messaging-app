@@ -21,6 +21,10 @@ def generate_shared_key(password, salt):
     # PBKDF2 with HMAC-SHA-256 to derive a key from the password and salt
     return hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
 
+@auth_bp.route('/')
+def home():
+    return render_template('embed.html')
+
 @auth_bp.route('/login/', methods=['GET', 'POST'])
 def login():
     msg = ''
