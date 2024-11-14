@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>iStealth Messaging</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const settingsIcon = document.querySelector(".settings-icon");
+                const settingsMenu = document.createElement("div");
+                settingsMenu.classList.add("settings-menu");
+                
+                // Pass the session variables to the settings menu
+                settingsMenu.innerHTML = `
+                    <p>Username: {{ session['username'] }}</p>
+                    <p>Connection ID: {{ session['connection_id'] }}</p>  <!-- Display connection_id -->
+                    <button class="close-settings">Close</button>
+                `;
+                
+                settingsIcon.addEventListener("click", function () {
+                    document.body.appendChild(settingsMenu);
+                });
+            
+                // Close the settings menu
+                const closeButton = settingsMenu.querySelector(".close-settings");
+                closeButton.addEventListener("click", function () {
+                    settingsMenu.remove();
+                });
+            });
+        </script>
+    </head>
+<body>
+    <div class="container">
+        <header>
+            <h1 class="glitch" data-text="iStealth">iStealth</h1>
+            <div class="settings-icon" onclick="openModal()"><i class="fa fa-cog"></i></div>
+        </header>
+
+        <!-- Modal for settings -->
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal()">&times;</span>
+                <h2>Settings</h2>
+                <p><strong>Username:</strong> {{ session['username'] }}</p>
+                <p><strong>Connection ID:</strong> {{ session['connection_id'] }}</p>
+            </div>
+        </div>
+
+        <div class="chat-container">
+            <!-- Sidebar for list of chat clients -->
+            <aside class="chat-sidebar">
+                <!-- List of Chat Clients -->
+                <div class="chat-clients">
+                    <h2>Contacts</h2>
+                    {% for contact in contacts %}
+                        <div class="chat-client">
+                            <a href="{{ url_for('messaging.view_messages', selected_contact=contact.username) }}">
+                                <p>{{ contact.username | e }}</p>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Add Client Form -->
+                <div class="add-client-form">
+                    <form action="{{ url_for('messaging.view_messages') }}" method="POST">
+                        <div class="search-bar">
+                            <input type="text" name="connection_id" placeholder="Enter Client ID" required>
+                        </div>
+                        <button type="submit" class="add-client-button">Add Client</button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- Main chat content area -->
+            <main class="chat-content">
+                <div class="chat-header">
+                    <h2>Chat with {{ selected_contact | default("...") | e }}</h2>
+                </div>
+                <div class="chat-messages">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="message {{ 'sender-message' if message.sender == session['username'] else 'client-message' }}">
+                                <div class="message-content">
+                                    <p>{{ message.message | e }}</p>
+                                    <span class="timestamp">{{ message.timestamp }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="no-messages">No messages yet. Start a conversation!</p>
+                    {% endif %}
+                </div>
+                
+                <!-- Message input box, displayed only if a contact is selected -->
+                {% if selected_contact %}
+                <form action="{{ url_for('messaging.send_message') }}" method="POST" class="message-form">
+                    <input type="text" name="message" id="message-input" placeholder="Type a message..." required>
+                    <input type="hidden" name="recipient" value="{{ selected_contact | e }}">
+                    <button type="submit"><i class="fa fa-paper-plane"></i> Send</button>
+                </form>
+                {% else %}
+                    <p class="select-contact">Please select a contact to start chatting.</p>
+                {% endif %}
+            </main>
+        </div>
+    </div>
+</body>
+</html>

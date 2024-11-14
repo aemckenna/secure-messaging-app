@@ -12,7 +12,7 @@
         <div class="login-card">
             <h2><span class="glitch" data-text="CREATE YOUR ACCOUNT">CREATE YOUR ACCOUNT</span></h2>
             <!-- Removed the nested form tag -->
-            <form action="/register/" method="POST">
+            <form action="{{ url_for('auth.register') }}" method="post">
                 <label for="username">USERNAME</label>
                 <div class="input-container">
                     <i class="fas fa-user"></i>
@@ -37,7 +37,7 @@
                 {% endif %}
             </form>
 
-            <a href="{{ url_for('login') }}" class="support-link">ALREADY HAVE AN ACCOUNT?</a>
+            <a href="{{ url_for('auth.login') }}" class="support-link">ALREADY HAVE AN ACCOUNT?</a>
         </div>
     </div>
 </body>
